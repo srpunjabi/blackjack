@@ -9,11 +9,11 @@ This project contains four packages.
 CardModel, GameModel, MainController and Views.
 
 Package CardModel - Contains classes to support building a card deck.
-Class Suit:  Enum Class contains fours types of Suits.
+	Class Suit:  Enum Class contains fours types of Suits.
   
-Class Rank:  Enum Class contains Ranks for 13 cards.
+	Class Rank:  Enum Class contains Ranks for 13 cards.
   
-Class Card:  Uses Suit and Rank to support a Card object.
+	Class Card:  Uses Suit and Rank to support a Card object.
   
   
 
@@ -21,13 +21,13 @@ Class Card:  Uses Suit and Rank to support a Card object.
 
 Package GameModel - Contains classes necessary to support gameplay.
 
-Class IPlayer: Interface implemented by Player and Dealer
+	Class IPlayer: Interface implemented by Player and Dealer
 
-Class Dealer: Implements IPlayer to support Dealer associated actions
+	Class Dealer: Implements IPlayer to support Dealer associated actions
 
-Class Player: Implements IPlayer to support Player associated actions
+	Class Player: Implements IPlayer to support Player associated actions
 
-Class Hand:  Creates a new BlackJack hand with a new deck and supports the player and dealer gameplay.
+	Class Hand:  Creates a new BlackJack hand with a new deck and supports the player and dealer gameplay.
 
   
 
