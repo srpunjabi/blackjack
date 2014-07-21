@@ -1,7 +1,7 @@
 package GameModel;
 import java.util.*;
 
-import Views.printView;
+import Views.PrintView;
 import CardModel.Card;
 import CardModel.Deck;
 /**
@@ -11,11 +11,10 @@ import CardModel.Deck;
 public class Hand 
 {
 	public Deck deck;
-	@SuppressWarnings("unused")
 	private double bet;
 	Dealer dealer;
 	Player player;
-	printView view;
+	PrintView view;
 	
 	/**
 	 * Constructor for Hand
@@ -24,14 +23,14 @@ public class Hand
 	 * @param player player object
 	 */
 	public Hand(double bet,Dealer dealer, Player player)
-	{
+	{	
 		this.bet = bet;
 		deck = new Deck();
 		deck.newDeck();
 		deck.shuffle();
 		this.dealer = dealer;
 		this.player = player;
-		this.view = new printView(player,dealer,bet);
+		this.view = new PrintView(player,dealer,this.bet);
 	}
 
 	/**

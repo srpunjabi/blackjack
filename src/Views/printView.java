@@ -5,7 +5,7 @@ package Views;
 import GameModel.Dealer;
 import GameModel.Player;
 
-public class printView
+public class PrintView
 {
 	Player player;
 	Dealer dealer;
@@ -17,7 +17,7 @@ public class printView
 	 * @param dealer Dealer object instance
 	 * @param bet 	double bet 
 	 */
-	public printView(Player player,Dealer dealer,double bet)
+	public PrintView(Player player,Dealer dealer,double bet)
 	{
 		this.player = player;
 		this.dealer = dealer;
