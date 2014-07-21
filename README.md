@@ -35,15 +35,15 @@ Package GameModel - Contains classes necessary to support gameplay.
 
 Package MainControllers - Contains classes that control and delegate game components
 
-GameController: Entry point for the game contains main class and a game Loop to support user interactions
+	GameController: Entry point for the game contains main class and a game Loop to support user interactions
 
-GameControllerDelegate: Uses the information passed by GameController and delgates actions to other classes
+	GameControllerDelegate: Uses the information passed by GameController and delgates actions to other classes
   
 
 
 
 Package Views:  Print appropriate responses to the console
 
-Class printView: prints appropriate messages based on user interactions and game results 
+	Class printView: prints appropriate messages based on user interactions and game results 
 
 
