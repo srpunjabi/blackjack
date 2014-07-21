@@ -17,11 +17,19 @@ public enum Rank
 	King(13);
 	
 	private int cardRank;
+	
+	/**
+	 * Private constructor returns int values for the Rank 
+	 * @param int numeric value of Rank
+	 */
 	private Rank(int cardRank)
 	{
 		this.cardRank = cardRank;
 	}
 	
+	/**Rank getter instance method
+	 * @return Returns the Rank of the current card instance
+	 */
 	public int getRank()
 	{
 		return this.cardRank;

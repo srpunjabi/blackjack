@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**@author Sumit Punjabi
+ * This Class creates a Deck of Cards using the Card object.
  */
 
 public class Deck 
@@ -41,7 +42,6 @@ public class Deck
 		}
 	}
 	
-	
 	/**This function deals cards to the players. Create an instance of Random class and generate a random int in the 
 	 * range of cardDeck size. Remove the Card at that location and return it.
 	 * @return A Card object removed from a random index in cardDeck
@@ -68,6 +68,4 @@ public class Deck
 		Card temp = cardDeck.remove(rand.nextInt(cardDeck.size()));
 		return temp;
 	}
-
-	
 }

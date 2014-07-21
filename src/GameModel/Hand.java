@@ -1,16 +1,28 @@
 package GameModel;
 import java.util.*;
 
+import Views.printView;
 import CardModel.Card;
 import CardModel.Deck;
-
+/**
+ * This class contains various methods to create a new BlackJack hand, new Card Deck, print and update results
+ * @author Sumit Punjabi
+ */
 public class Hand 
 {
 	public Deck deck;
+	@SuppressWarnings("unused")
 	private double bet;
 	Dealer dealer;
 	Player player;
+	printView view;
 	
+	/**
+	 * Constructor for Hand
+	 * @param bet double amount that player bet
+	 * @param dealer dealer object
+	 * @param player player object
+	 */
 	public Hand(double bet,Dealer dealer, Player player)
 	{
 		this.bet = bet;
@@ -19,6 +31,7 @@ public class Hand
 		deck.shuffle();
 		this.dealer = dealer;
 		this.player = player;
+		this.view = new printView(player,dealer,bet);
 	}
 
 	/**
@@ -32,29 +45,25 @@ public class Hand
 		this.player.updateHand(deck.dealCards(2));
 	}
 
-	
 	/**
-	 * Creates a new BlackJack Hand, maintains player and dealer data, gets and prints results
-	 * @return boolean telling us if the player won
+	 * Creates a new BlackJack Hand, maintains player and dealer data, updates and prints results
 	 */
-	public boolean startHand()
+	public void startHand()
 	{
 		//Deals Two Cards to both Player and Dealer
 		dealPlayers(dealer, player);
 		
 		//Print player hands at start of the game
-		dealer.printHand(true);
+		dealer.printfirstHand();//dealer only shows one card at the start
 		player.printHand();
 		
-		//Get game results
-		boolean result = getResults();
+		//Prints the game results
+		printResults();
 		
 		//clearing player and dealer hands after each hand
 		player.clearHand();
 		dealer.clearHand();
-		return result;
 	}
-	
 	
 	/************************ Private Helpers ****************************************/
 	/**
@@ -62,106 +71,106 @@ public class Hand
 	 * 1) Does player or dealer have BlackJack at the start->uses hasBlackJack() subroutine for this
 	 * 2) Did player get busted
 	 * 3) Did dealer get busted
-	 * 4) if nobody got busted who has the higher hand
-	 * @return true if player won and false if player lost
+	 * 4) if nobody got busted who has won the hand
 	 */
-	public boolean getResults()
-	{
-		if(hasBlackJack())//if either player or both player and dealer have blackjack
-		{
-			return true;
-		}
-		if(playerBusted())//if player goes over 21
-		{
-			System.out.println("You went bust so you loose      Score:" + player.score());
-			return false;
-		}
-		else if(dealerBusted())//if dealer goes over 21
-		{
-				System.out.println("Dealer Busted		Dealer Score: " + dealer.score());
-				double newbalance = player.getBalance() + bet + bet;
-				player.setBalance(newbalance);
-				System.out.println("			You won your new balance: $" + player.getBalance());
-				return true;
-		}
+	private void printResults()
+	{	//Check if anyone has BlackJack at the start
+		if(player.score() == 21 && dealer.score()==21)
+			view.printgameTied();
+		else if(player.score() == 21)
+			view.printPlayerBlackJack();
+		else if(dealer.score() == 21)
+			view.printdealerHasBlackJack();
 		else
 		{
-			if(dealer.score() > player.score())//if dealer has a higher sore without going bust
+			if(playerBusted())
+				playerResult();
+			else if(dealerBusted())
+				dealerResult();
+			else
 			{
-				System.out.println("Dealer win with the highscore of: " + dealer.score());
-				return false;
-			}
-			else if(dealer.score() == player.score())//if dealer and player tied
-			{
-				System.out.println("Both you and Dealer have tied: " + dealer.score());
-				double newbalance = player.getBalance() + bet;
-				player.setBalance(newbalance);
-				System.out.println("Your bet us refunded   new Balance: $" + player.getBalance());
-				return true;
-			}
-			
-			else if(player.score() == 21)//Check if Player reached blackJack
-			{
-				System.out.println("Congratulations you have blackjack      Score:" + player.score());
-				double newbalance = player.getBalance() + (bet / 2) * 3 + bet;
-				player.setBalance(newbalance);
-				System.out.println("You won your new balance: " + player.getBalance());
-				return true;	
+				playerResult();//Updates player data and prints the results
+				dealerResult();//Updates dealer data and prints the results
 			}
 		}
-		return false;
 	}
+	
 	/**
-	 * Checks if at the start of the game if dealer or player have BlackJack from two cards dealt.
-	 * 1) if both have BlackJack
-	 * 2) if Player has BlackJack
-	 * 3) if Dealer has BlackJack but player doesn't
-	 * @return true if in any case player has BlackJack and false otherwise
+	 * Evaluates various possibilities after dealer is done hitting and calls the appropriate printing method in printView class
 	 */
-	private boolean hasBlackJack() {
-		
-		if(dealer.score() == 21 && player.score()==21)//Check if both dealer and player have BlackJack
+	private void dealerResult()
+	{
+		int dealerScore = dealer.score();
+		int playerScore = player.score();
+		if(dealerScore > 21)//Dealer goes bust
 		{
-			
-			double newbalance = player.getBalance() + bet;
-			player.setBalance(newbalance);
-			System.out.println("Both you and Dealer have a BlackJack your bet is refunded to you"
-			+ " new balance: $" + player.getBalance());
+			view.printdealerBust();
+		}
+		else if(dealerScore<21 && dealerScore > playerScore)//Dealer Wins
+		{
+			view.printdealerWin();
+		}
+		else if(dealerScore == playerScore)//game tied
+		{
+			view.printgameTied();
+		}
+		else if(dealerScore == 21)//dealer has blackjack
+		{
+			view.printdealerHasBlackJack();
+		}
+	}
+	
+	/**
+	 * Evaluates the game of the side of player.  Checks various condition to validate victory or loss.
+	 * Checks if player went bust
+	 * Checks if player reached 21
+	 * Checks if player has higherScore than dealer or when Dealer goes bust
+	 * @return boolean
+	 */
+	private boolean playerResult()
+	{
+		int playerScore = player.score();
+		int dealerScore = dealer.score();
+		if(playerScore > 21)//player busted
+		{
+			System.out.println("You went bust so you loose      Score:" + player.score());
+		}
+		else if(playerScore == 21 && (dealerScore<21 || dealerScore>21))//Player has blackJack
+		{
+			view.printPlayerBlackJack();
+		}
+		else if(playerScore < 21 && playerScore > dealerScore)//Player has higher score
+		{	
+			view.printdealerLost();
+			view.printPlayerWin();
+		}
+		else if(playerScore<21 && dealerScore > 21)//Player is under 21 but dealer busted
+		{
+			view.printdealerBust();
 			return true;
 		}
-		else if(player.score() == 21)//Check if Player has blackJack in the first two cards
-		{
-			System.out.println("Congratulations you have blackjack      Score:" + player.score());
-			double newbalance = player.getBalance() + (bet / 2) * 3 + bet;
-			player.setBalance(newbalance);
-			System.out.println("You won your new balance: " + player.getBalance());
-			return true;	
-		}
-		else if(dealer.score() == 21)//Check if Dealer has BlackJack in the first two cards
-		{
-			System.out.println("Dealer has BlackJack		you loose");
-			return false;
-		}
+		
 		return false;
+
 	}
 	
 	/**This function is a private helper for getResults().  
 	 * Game Loop for dealer. Dealer must hit until he or she is over 17 and stand once over 17
 	 * @return true if dealer goes over 21 and false otherwise
 	 */
-	private boolean dealerBusted()
+	private boolean dealerBusted() 
 	{
 		int score = dealer.score();
-		while(score < 17)
-		{	
+		while (score < 17) {
 			Card card = deck.drawCard();
 			dealer.hit(card);
 			score += card.getRank().getRank();
 		}
-		dealer.printHand(false);
-		if(score > 21)
+		dealer.printHand();
+		if (score > 21)
 			return true;
-		return false;
+		else
+			return false;
 	}
 	
 	/**
@@ -170,9 +179,10 @@ public class Hand
 	 */
 	private boolean playerBusted() 
 	{
+		@SuppressWarnings("resource")
 		Scanner input = new Scanner(System.in);
 		String action;
-		boolean exFlag = false;
+	
 		boolean stand = false;
 		boolean bust = false;
 		do {
@@ -191,19 +201,16 @@ public class Hand
 					}
 					else if(player.score() == 21)
 					{
-						break;
+						return false;
 					}
 				}
-				if (action.equalsIgnoreCase("stand")) 
+				else if (action.equalsIgnoreCase("stand")) 
 				{
-					player.stand();
-					exFlag = false;
-					player.stand();
+					stand = true;
 					break;
 				} 
 				else 
 				{
-					exFlag = true;
 					InputMismatchException e = new InputMismatchException();
 					throw e;
 				}
@@ -212,9 +219,8 @@ public class Hand
 			{
 				System.out.println("please enter a valid string");
 			}
-			
-		} while (exFlag && stand == false);
-		
+	
+		} while (stand == false && bust==false);
 		return bust;
 	}
 }

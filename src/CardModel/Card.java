@@ -19,7 +19,7 @@ public class Card
 	{
 		return this.rank; 
 	}
-
+	
 	/**
 	 * Returns the suit of the card
 	 * @return Suit Object
@@ -36,7 +36,7 @@ public class Card
 	public String printCard()
 	{
 		String cardString;
-		if((this.rank == Rank.King) || (this.rank == Rank.Queen) || (this.rank == Rank.Jack))
+		if((this.rank == Rank.King) || (this.rank == Rank.Queen) || (this.rank == Rank.Jack) || (this.rank == Rank.Ace))
 		{
 			cardString = this.rank.toString() + " " + this.suit.toString();
 			return cardString;
@@ -45,14 +45,22 @@ public class Card
 		return cardString;
 	}
 	
+	/**
+	 * Checks if current card object and the argument card object are equal by comparing their rank and suit
+	 * @param card a Card object
+	 * @return boolean true if both cards are equal and false otherwise
+	 */
 	public boolean equals(Card card)
 	{
 		if((this.suit == card.suit) && (this.rank == card.rank))
 			return true;
-		return false;
-			
+		return false;	
 	}
 	
+	/**
+	 * Return the blackJack value of the card so its rank for card 2 to 10 and 10 for face cards except Ace
+	 * @return int returning numeric rank of each card.
+	 */
 	public int blackJackValue()
 	{
 		if((this.rank == Rank.King) || (this.rank == Rank.Queen) || (this.rank == Rank.Jack))
@@ -63,6 +71,10 @@ public class Card
 			return this.rank.getRank();
 	}
 	
+	/**
+	 * Check if the current card is an Ace by comparing ranks of current card and Rank.Ace enum
+	 * @return boolean true if the card is an Ace and false otherwise.
+	 */
 	public boolean isAce()
 	{
 		if(this.rank == Rank.Ace)
@@ -70,5 +82,4 @@ public class Card
 		else
 			return false;
 	}
-	
 }
